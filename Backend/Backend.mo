@@ -1,4 +1,6 @@
-import Iter from "mo:base/Iter";
+import Iter  "mo:base/Iter";
+import Array "mo:base/Array";
+import Principal "mo:base/Principal";
 
 actor MedInsure {
   // Define Data Types
@@ -87,14 +89,17 @@ actor MedInsure {
 
   // Function: Repay Loan
   public shared(msg) func repayLoan(amount: Nat): async Text {
-    let loanOpt = Iter.find(loans.vals(), func (loan) { loan.borrower == msg.caller and loan.status == "Active" });
+    let loanOpt = Array.find<Loan>(loans, func loan = loan.borrower == msg.caller and loan.status == "Active" );
+  
+  
+  
     switch (loanOpt) {
       case (null) return "No active loans found.";
       case (?loan) {
         if (amount < loan.amount) {
           return "Insufficient repayment amount.";
         };
-        loans := Array.filter(loans, func (l) { l != loan });
+        loans := Array.filter<Loan>(loans, func (l) { l != loan });
         pooledFunds += loan.amount;
         return "Loan repaid successfully.";
       };
@@ -113,7 +118,7 @@ actor MedInsure {
 
   // Function: View Active Loans
   public query func viewActiveLoans(): async [Loan] {
-    return Array.filter(loans, func (loan) { loan.status == "Active" });
+    return Array.filter<Loan>(loans, func (loan) { loan.status == "Active" });
   };
 
   // Function: View Pooled Funds
@@ -123,9 +128,9 @@ actor MedInsure {
 
   // Function: Add Funds to Pool
   public shared(msg) func addFunds(amount: Nat): async Text {
-    if (msg.caller != Principal.fromText("your-admin-principal")) {
-      return "Only admin can add funds.";
-    };
+    // if (msg.caller != Principal.fromText("y")) {
+    //   return "Only admin can add funds.";
+    // };
     pooledFunds += amount;
     return "Funds added successfully.";
   };
