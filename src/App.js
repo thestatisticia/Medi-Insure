@@ -14,7 +14,7 @@ const App = () => {
   // Connect Plug Wallet Function
   const connectPlugWallet = async () => {
     try {
-      const whitelist = ["your-canister-id"];
+      const whitelist = ["y3x7a-jyaaa-aaaal-art7q-cai"];
       const host = "https://mainnet.dfinity.network";
 
       const isPlugAvailable = window.ic && window.ic.plug;
